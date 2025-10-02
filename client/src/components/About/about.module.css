@@ -1,0 +1,28 @@
+/* Right side style details */
+
+.about__outer__side {
+  width: 50%;
+}
+
+.about__right__side a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.about__right__side h2 {
+  padding: 20px 0;
+}
+.about__right__side p {
+  padding: 0 0 10px;
+}
+
+.about__right__side button {
+  padding: 4px 8px;
+  background-color: var(--button-color);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+}

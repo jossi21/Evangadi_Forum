@@ -1,0 +1,35 @@
+.home__inner_wrapper {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home__user__ask {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.home__ask__button {
+  background-color: #5c7dc0;
+  border: none;
+  padding: 4px 22px;
+  border-radius: 3px;
+}
+
+.home__ask__button a {
+  color: white;
+  text-decoration: none;
+}
+
+.home__questions h3 {
+  margin: 40px 0 10px;
+}
+.home__question__title {
+  display: grid;
+  grid-template-columns: 5% 85%;
+  align-items: center;
+  margin: 10px 0;
+  gap: 50px;
+}

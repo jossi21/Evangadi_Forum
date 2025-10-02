@@ -1,0 +1,77 @@
+.outer__wrapper__askQuestionPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+  margin: 0 auto;
+  font-size: 12px;
+}
+h4 {
+  font-size: 16px;
+  padding-bottom: 5px;
+}
+.guide__wrapper {
+  margin: 20px 0 40px;
+}
+.guide__wrapper ul li {
+  padding-bottom: 3px;
+}
+
+/* Ask Question box */
+.question__box {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 25px 20px;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 50px;
+  border-radius: 5px;
+}
+
+.go__to__question {
+  color: #000;
+  text-decoration: none;
+}
+.question__box form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.question__box form input,
+.question__box form textarea {
+  padding: 8px 12px;
+}
+
+.question__box form input {
+  margin-top: 10px;
+}
+
+.question__box form input:focus {
+  outline-color: var(--button-color);
+}
+
+.question__box form textarea:focus {
+  outline-color: var(--button-color);
+}
+
+.question__box form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 130px;
+}
+
+.error__text {
+  color: red;
+  text-align: start;
+  font-size: 16px;
+}
+.question__box form button {
+  width: 150px;
+  padding: 6px 0;
+  background-color: #5c7dc0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
