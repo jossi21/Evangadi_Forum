@@ -1,22 +1,26 @@
 import React, { useState } from "react";
 import classes from "./askQuestion.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import axios from "../../Axios/axiosConfig";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const AskQuestion = () => {
   const titleDom = useRef();
   const descriptionDom = useRef();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
+  const token = localStorage.getItem("token");
 
   async function postQuestionHandler(e) {
     e.preventDefault();
 
-    const title = titleDom.current.value.trim();
-    const description = descriptionDom.current.value.trim();
+    const title = titleDom.current.value;
+    const description = descriptionDom.current.value;
 
-    console.log(title);
-    console.log(description);
+    // console.log(title);
+    // console.log(description);
 
     if (!title || !description) {
       setError("Please provide all required fields");
@@ -28,6 +32,7 @@ const AskQuestion = () => {
     const token = localStorage.getItem("token");
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "/question",
         {
@@ -40,8 +45,11 @@ const AskQuestion = () => {
           },
         }
       );
-      alert(response?.data?.msg);
+      setLoading(false);
+      alert(response?.data?.message);
+      nav("/");
     } catch (error) {
+      setLoading(false);
       console.log(error?.response?.data?.msg);
     }
   }
@@ -75,7 +83,13 @@ const AskQuestion = () => {
                 placeholder="Question Description..."
               ></textarea>
               {error && <div className={classes.error__text}>{error}</div>}
-              <button type="submit">Post Your Question</button>
+              <button type="submit">
+                {loading ? (
+                  <ClipLoader size={15}></ClipLoader>
+                ) : (
+                  "Post Your Question"
+                )}
+              </button>
             </form>
           </div>
         </div>

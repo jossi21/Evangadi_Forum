@@ -3,33 +3,36 @@ import { contextData } from "../../components/ContextData/ContextData";
 import classes from "./home.module.css";
 import { FaUser } from "react-icons/fa";
 import baseAxios from "../../Axios/axiosConfig";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
   const [questions, setQuestions] = useState([]);
   const { user, setUser } = useContext(contextData);
-  console.log(("user object: ", user));
-  console.log("user username: ", user?.username);
+  // console.log(("user object: ", user));
+  // console.log("user username: ", user?.username);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    baseAxios
-      .get("/question", {
+  const token = localStorage.getItem("token");
+  const nav = useNavigate();
+  async function askedQuestions() {
+    try {
+      const { data } = await baseAxios.get("/question", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        localStorage.setItem("token", response?.data?.token);
-        console.log(response.data.questions);
-        setQuestions(response.data.questions);
-      })
-      .catch((err) => {
-        console.log("i couldn't fetch: ", err.message);
       });
-  }, []);
 
-  // console.log(abd);
+      // console.log(data?.questions);
+      setQuestions(data?.questions);
+    } catch (error) {
+      console.log(error);
+      nav("/login");
+    }
+  }
+
+  useEffect(() => {
+    askedQuestions();
+  }, [token]);
   return (
     <>
       <div className={classes.home__outer_wrapper}>
@@ -52,7 +55,11 @@ const Home = () => {
                       <h6>{item.user_name}</h6>
                     </div>
 
-                    <div>{item.title}</div>
+                    <div>
+                      <Link className={classes.each__question__title}>
+                        {item.title}
+                      </Link>
+                    </div>
                   </div>
                 </div>
               );

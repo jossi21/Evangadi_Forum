@@ -22,17 +22,6 @@ const Login = () => {
     // console.log(email);
     // console.log(password);
 
-    const fields = {
-      email: emailDom,
-      password: passwordDom,
-    };
-    const isThatValid = validationChecker(fields);
-
-    if (!isThatValid.isValid) {
-      setError(isThatValid.errorMessage);
-      return;
-    }
-
     try {
       setLoading(true);
       const response = await axios.post("/user/login", {
@@ -41,7 +30,7 @@ const Login = () => {
       });
       setLoading(false);
       alert(response?.data?.message);
-      console.log(response);
+      // console.log(response);
       localStorage.setItem("token", response?.data?.token);
       nav("/");
     } catch (error) {
@@ -51,20 +40,6 @@ const Login = () => {
     }
   }
 
-  function validationChecker(fields) {
-    let isValid = true;
-    let errorMessage = "";
-
-    for (const [key, dom] of Object.entries(fields)) {
-      const isFieldValid = dom.current.value;
-      dom.current.style.border = isFieldValid ? "" : "solid 1px red";
-      if (!isFieldValid) {
-        isValid = false;
-        errorMessage = "Please provide all required fields";
-      }
-    }
-    return { isValid, errorMessage };
-  }
   return (
     <>
       <section className={classes.section__wrapper}>
