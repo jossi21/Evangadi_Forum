@@ -47,16 +47,19 @@ const Home = () => {
             <h3>Questions</h3>
             {questions.map((item, id) => {
               return (
-                <div>
+                <div key={id}>
                   <hr />
-                  <div className={classes.home__question__title} key={id}>
+                  <div className={classes.home__question__title} key={item.id}>
                     <div>
                       <FaUser />
                       <h6>{item.user_name}</h6>
                     </div>
 
                     <div>
-                      <Link className={classes.each__question__title}>
+                      <Link
+                        to={`/question/${item.question_id}`}
+                        className={classes.each__question__title}
+                      >
                         {item.title}
                       </Link>
                     </div>

@@ -4,6 +4,7 @@ import Register from "./src/components/Auth/Register";
 import LayOut from "./src/components/LayOut/LayOut";
 import Landing from "./src/Pages/Landing/Login";
 import AskQuestion from "./src/Pages/AskQuestion/AskQuestion";
+import QuestionDetail from "./src/Pages/Question Detiail&Answer/QuestionDetail";
 
 const Routing = () => {
   return (
@@ -13,6 +14,7 @@ const Routing = () => {
         <Route path="/login" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/askQuestion" element={<AskQuestion />} />
+        <Route path="/question/:question_id" element={<QuestionDetail />} />
       </Routes>
     </LayOut>
   );

@@ -4,6 +4,8 @@ import About from "../../components/About/About";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../Axios/axiosConfig";
 import ClipLoader from "react-spinners/ClipLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 // adding functionality of login__form
 const Login = () => {
@@ -13,6 +15,8 @@ const Login = () => {
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const [serverResponse, setServerResponse] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function loginHandler(e) {
     e.preventDefault();
@@ -28,8 +32,9 @@ const Login = () => {
         email,
         password,
       });
+      console.log(response?.data?.message);
+      setServerResponse(response?.data?.message);
       setLoading(false);
-      alert(response?.data?.message);
       // console.log(response);
       localStorage.setItem("token", response?.data?.token);
       nav("/");
@@ -40,6 +45,11 @@ const Login = () => {
     }
   }
 
+  // password visibility function
+  const passwordVisibility = (e) => {
+    e.preventDefault();
+    setShowPassword(!showPassword);
+  };
   return (
     <>
       <section className={classes.section__wrapper}>
@@ -63,17 +73,28 @@ const Login = () => {
                     placeholder="Your Email"
                   />
                   <br />
-                  <input
-                    ref={passwordDom}
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Your Password"
-                  />
+                  <div className={classes.password__visibility}>
+                    <input
+                      ref={passwordDom}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      placeholder="Your Password"
+                    />
+                    <button onClick={passwordVisibility}>
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                      />
+                    </button>
+                  </div>
                   <div>
-                    {error && (
-                      <small style={{ color: "red", textAlign: "center" }}>
+                    {error ? (
+                      <small style={{ color: "red", textAlign: "start" }}>
                         {error}
+                      </small>
+                    ) : (
+                      <small style={{ color: "green", textAlign: "start" }}>
+                        {serverResponse}
                       </small>
                     )}
                   </div>

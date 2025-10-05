@@ -88,7 +88,7 @@ async function singleQuestion(req, res) {
   // fetch the single data
   try {
     const [singleQuestion] = await dbConnection.query(
-      "SELECT userid, title, id, description AS content, created_at FROM questionTable WHERE questionid = ? ",
+      "SELECT q.userid, q.title, q.id, q.description AS content, q.created_at, q.questionid, u.username AS user_name FROM questionTable q JOIN usertable u ON q.userid = u.userid WHERE q.questionid = ? ",
       [question_id]
     );
     // console.log("singleQuestion: ", singleQuestion);
@@ -99,6 +99,8 @@ async function singleQuestion(req, res) {
       });
     } else {
       return res.status(StatusCodes.OK).json({
+        user_name: singleQuestion[0].user_name,
+        question_id: singleQuestion[0].questionid,
         id: singleQuestion[0].id,
         title: singleQuestion[0].title,
         content: singleQuestion[0].content,
