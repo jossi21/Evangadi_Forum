@@ -4,6 +4,8 @@ import About from "../About/About";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../Axios/axiosConfig";
 import ClipLoader from "react-spinners/ClipLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Register = () => {
   const emailDom = useRef(null);
@@ -16,6 +18,7 @@ const Register = () => {
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submitHandler(e) {
     e.preventDefault();
@@ -74,6 +77,12 @@ const Register = () => {
     }
     return { isValid, errorMessage };
   }
+
+  // password visibility function
+  const passwordVisibility = (e) => {
+    e.preventDefault();
+    setShowPassword(!showPassword);
+  };
   return (
     <>
       <section className={classes.section__wrapper}>
@@ -119,14 +128,20 @@ const Register = () => {
                     placeholder="Email"
                   />
 
-                  <input
-                    ref={passwordDom}
-                    type="password"
-                    name="password"
-                    id="password"
-                    className={classes.register__password}
-                    placeholder="Password"
-                  />
+                  <div className={classes.password__visibility}>
+                    <input
+                      ref={passwordDom}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      placeholder="Your Password"
+                    />
+                    <button onClick={passwordVisibility}>
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                      />
+                    </button>
+                  </div>
                   <div style={{ textAlign: "center" }}>
                     {error && (
                       <small
