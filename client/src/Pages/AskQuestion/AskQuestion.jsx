@@ -43,10 +43,10 @@ const AskQuestion = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setLoading(false);
-      alert(response?.data?.message);
+      // alert(response?.data?.message);
       nav("/");
     } catch (error) {
       setLoading(false);

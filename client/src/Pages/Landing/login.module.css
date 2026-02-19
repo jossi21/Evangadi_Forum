@@ -81,7 +81,9 @@
   }
 
   .both__inner__wrapper {
+    height: max-content;
     width: 90%;
+    flex-direction: column;
   }
   .login__outer__wrapper {
     width: 78%;

@@ -59,7 +59,7 @@ const QuestionDetail = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setLoading(false);
       answerDom.current.value = "";
@@ -68,7 +68,7 @@ const QuestionDetail = () => {
       setServerResponse(response?.data?.message);
     } catch (error) {
       setLoading(false);
-      console.log(error.message);
+      // console.log(error.message);
       setError(error?.response?.data?.message);
     }
   }
@@ -80,7 +80,7 @@ const QuestionDetail = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data.answers);
+      // console.log(data.answers);
       setEachAnswer(data.answers);
     } catch (error) {
       alert(error.message);
@@ -144,7 +144,7 @@ const QuestionDetail = () => {
                 {loading ? (
                   <ClipLoader size={15}></ClipLoader>
                 ) : (
-                  "Post Your Question"
+                  "Post Your Answer"
                 )}
               </button>
             </form>
