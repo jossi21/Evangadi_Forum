@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { contextData } from "../../components/ContextData/ContextData";
 import classes from "./home.module.css";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaUserCircle } from "react-icons/fa";
 import baseAxios from "../../Axios/axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -41,7 +41,10 @@ const Home = () => {
             <button type="button" className={classes.home__ask__button}>
               <Link to={"/askQuestion"}>Ask Question</Link>
             </button>
-            <div>Welcome: {user?.username}</div>
+            <div className={classes.user__welcome__div}>
+              <h4>Welcome:</h4> <FaUserCircle color="blue" size={20} />
+              <span> {user?.username}</span>
+            </div>
           </div>
           <div className={classes.home__questions}>
             <h3>Questions</h3>

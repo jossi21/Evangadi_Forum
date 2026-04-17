@@ -66,6 +66,9 @@ const QuestionDetail = () => {
       // console.log(response);
       // alert(response?.data?.message);
       setServerResponse(response?.data?.message);
+      setTimeout(() => {
+        nav(0);
+      }, 100);
     } catch (error) {
       setLoading(false);
       // console.log(error.message);
@@ -140,7 +143,7 @@ const QuestionDetail = () => {
               ) : (
                 <div className={classes.posted__response}>{severResponse}</div>
               )}
-              <button type="submit">
+              <button onClick={() => nav(0)} type="submit">
                 {loading ? (
                   <ClipLoader size={15}></ClipLoader>
                 ) : (

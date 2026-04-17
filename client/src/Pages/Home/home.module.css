@@ -22,7 +22,18 @@
   color: white;
   text-decoration: none;
 }
+/* user welcome button */
+.user__welcome__div {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
+.user__welcome__div h4 {
+  font-size: 20px;
+}
 .home__questions h3 {
   margin: 40px 0 10px;
 }
