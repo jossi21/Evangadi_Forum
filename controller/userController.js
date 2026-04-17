@@ -17,8 +17,8 @@ async function register(req, res) {
   try {
     // Error handling to check for existing user to prevent duplicates
     const [user] = await dbConnection.query(
-      "select username, userid FROM userTable WHERE username = ? or email=?",
-      [username, email]
+      "select username, userid FROM usertable WHERE username = ? or email=?",
+      [username, email],
     );
     if (user.length > 0) {
       return res.status(StatusCodes.CONFLICT).json({
@@ -40,17 +40,18 @@ async function register(req, res) {
     const hashedPassword = await bcrypt.hash(password, salt);
     // User Registration Logic and tore the data on the database
     await dbConnection.query(
-      "INSERT INTO   userTable(username, firstname, lastname, email, password) values (?, ?, ?, ?, ?)",
-      [username, firstname, lastname, email, hashedPassword]
+      "INSERT INTO   usertable(username, firstname, lastname, email, password) values (?, ?, ?, ?, ?)",
+      [username, firstname, lastname, email, hashedPassword],
     );
     return res.status(StatusCodes.CREATED).json({
       message: "User registered successfully",
     });
     // Handling error releated to the Server
-  } catch {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      error: "Internal Server error",
-      message: "An unexpected error occurred",
+  } catch (error) {
+    console.log("REGISTER PROD ERROR:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      message: error.message,
     });
   }
 }
@@ -68,10 +69,10 @@ async function login(req, res) {
     });
   }
   try {
-    // Retrieve the username, userid and password from the userTable with it email
+    // Retrieve the username, userid and password from the usertable with it email
     const [user] = await dbConnection.query(
-      "SELECT username, userid, password FROM userTable WHERE email = ? ",
-      [email]
+      "SELECT username, userid, password FROM usertable WHERE email = ? ",
+      [email],
     );
 
     // Handling Error when unauth try to login
@@ -102,7 +103,8 @@ async function login(req, res) {
       token,
       username,
     });
-  } catch {
+  } catch (error) {
+    console.error("Database Error: ", error);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       error: "Internal Server Error",
       message: "An unexpected error occurred",

@@ -29,7 +29,7 @@ async function postAnswer(req, res) {
     const [existingAnswers] = await dbConnection.query(
       `SELECT answerid FROM answertable 
        WHERE questionid = ? AND userid = ? AND answer = ?`,
-      [questionid, userid, trimmedAnswer]
+      [questionid, userid, trimmedAnswer],
     );
 
     if (existingAnswers.length > 0) {
@@ -43,7 +43,7 @@ async function postAnswer(req, res) {
     // Insert the new answer if no duplicate exists
     const [result] = await dbConnection.query(
       "INSERT INTO answertable (questionid, userid, answer) VALUES (?, ?, ?)",
-      [questionid, userid, trimmedAnswer]
+      [questionid, userid, trimmedAnswer],
     );
 
     return res.status(StatusCodes.CREATED).json({
@@ -66,7 +66,7 @@ async function getAnswer(req, res) {
   try {
     const [answers] = await dbConnection.query(
       "SELECT a.answerid AS answer_id, a.answer AS content, a.created_at, u.username AS user_name FROM answertable a JOIN usertable u ON a.userid = u.userid WHERE questionid = ?",
-      [questionid]
+      [questionid],
     );
     if (answers.length === 0) {
       return res.status(StatusCodes.NOT_FOUND).json({
@@ -84,13 +84,10 @@ async function getAnswer(req, res) {
       });
     }
   } catch (error) {
-    // log to debug
     console.error("Database Error: ", error);
-
-    // Handling Error of the Server
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       error: "Internal Server Error",
-      message: "An unexpected error occurred",
+      message: "An unexpected error occurred while posting your answer",
     });
   }
 }

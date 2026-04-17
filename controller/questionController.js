@@ -19,10 +19,10 @@ async function postQuestion(req, res) {
   const questionid = uuidv4();
 
   try {
-    // Post the question on the questionTable in the database
+    // Post the question on the questiontable in the database
     await dbConnection.query(
-      "INSERT INTO questionTable (questionid, userid, title, description) VALUES (?, ?, ?, ?)",
-      [questionid, userid, title, description]
+      "INSERT INTO questiontable (questionid, userid, title, description) VALUES (?, ?, ?, ?)",
+      [questionid, userid, title, description],
     );
 
     return res.status(StatusCodes.CREATED).json({
@@ -46,7 +46,7 @@ async function allQuestion(req, res) {
   // fetch the allQuestion from the database
   try {
     const [questions] = await dbConnection.query(
-      "SELECT id, title, description AS content, created_at,questionid AS question_id, username FROM questionTable  JOIN usertable ON questionTable.userid = usertable.userid "
+      "SELECT id, title, description AS content, created_at,questionid AS question_id, username FROM questiontable  JOIN usertable ON questiontable.userid = usertable.userid ",
     );
     // console.log("Questions fetched:", questions);
 
@@ -88,8 +88,8 @@ async function singleQuestion(req, res) {
   // fetch the single data
   try {
     const [singleQuestion] = await dbConnection.query(
-      "SELECT q.userid, q.title, q.id, q.description AS content, q.created_at, q.questionid, u.username AS user_name FROM questionTable q JOIN usertable u ON q.userid = u.userid WHERE q.questionid = ? ",
-      [question_id]
+      "SELECT q.userid, q.title, q.id, q.description AS content, q.created_at, q.questionid, u.username AS user_name FROM questiontable q JOIN usertable u ON q.userid = u.userid WHERE q.questionid = ? ",
+      [question_id],
     );
     // console.log("singleQuestion: ", singleQuestion);
     if (singleQuestion.length === 0) {
