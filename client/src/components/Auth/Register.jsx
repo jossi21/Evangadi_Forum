@@ -4,6 +4,8 @@ import About from "../About/About";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../Axios/axiosConfig";
 import ClipLoader from "react-spinners/ClipLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Register = () => {
   const emailDom = useRef(null);
@@ -16,6 +18,7 @@ const Register = () => {
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submitHandler(e) {
     e.preventDefault();
@@ -74,6 +77,12 @@ const Register = () => {
     }
     return { isValid, errorMessage };
   }
+
+  const togglePasswordVisibility = (e) => {
+    e.preventDefault();
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
       <section className={classes.section__wrapper}>
@@ -87,7 +96,7 @@ const Register = () => {
                 </p>
               </div>
               <div className={classes.register__form}>
-                <form action="" onSubmit={submitHandler}>
+                <form onSubmit={submitHandler}>
                   <input
                     ref={userNameDom}
                     type="text"
@@ -119,33 +128,45 @@ const Register = () => {
                     placeholder="Email"
                   />
 
-                  <input
-                    ref={passwordDom}
-                    type="password"
-                    name="password"
-                    id="password"
-                    className={classes.register__password}
-                    placeholder="Password"
-                  />
-                  <div style={{ textAlign: "center" }}>
-                    {error && (
+                  {/* Password field with toggle */}
+                  <div className={classes.passwordContainer}>
+                    <input
+                      ref={passwordDom}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      placeholder="Password"
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className={classes.passwordToggle}
+                    >
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                      />
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div style={{ textAlign: "center" }}>
                       <small
                         style={{
                           color: "red",
-                          padding: "0% 20% 0% 25%",
                         }}
                       >
                         {error}
                       </small>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
                   <div>
-                    <button className={classes.register__button} type="submit">
-                      {loading ? (
-                        <ClipLoader size={15}></ClipLoader>
-                      ) : (
-                        "Agree and Join"
-                      )}
+                    <button
+                      className={classes.register__button}
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? <ClipLoader size={15} /> : "Agree and Join"}
                     </button>
                   </div>
                 </form>
@@ -153,10 +174,10 @@ const Register = () => {
 
               <div>
                 <p className={classes.register__policy}>
-                  I agree to the <Link to={"/login"}>privacy policy</Link>and
+                  I agree to the <Link to={"/login"}>privacy policy</Link> and
                   <a href="">term of service</a>
                 </p>
-                <Link to={"/login"}>Already have an account </Link>
+                <Link to={"/login"}>Already have an account</Link>
               </div>
             </div>
           </div>
