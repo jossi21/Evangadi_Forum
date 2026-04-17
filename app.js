@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 2127;
 // ==================== CORS CONFIGURATION ====================
 const allowedOrigins = isProduction
   ? [process.env.FRONTEND_URL, "https://evangadi-forum-by-jossi.netlify.app"]
-  : ["http://localhost:5173", "http://localhost:3000"];
+  : ["http://localhost:5173", "http://localhost:3000", "http://localhost:4173"];
 
 const corsOptions = {
   origin: function (origin, callback) {
