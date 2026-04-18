@@ -1,31 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import baseAxios from "../../Axios/axiosConfig";
-import { FaCheck, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import classes from "./questionDetail.module.css";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const QuestionDetail = () => {
   const { question_id } = useParams();
-  const [singleQuestion, setSingleQuestion] = useState([]);
+
+  const [singleQuestion, setSingleQuestion] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
-  const [severResponse, setServerResponse] = useState([]);
+  const [error, setError] = useState("");
+  const [serverResponse, setServerResponse] = useState("");
   const [eachAnswers, setEachAnswer] = useState([]);
 
-  const nav = useNavigate();
+  const answerDom = useRef();
   const token = localStorage.getItem("token");
 
-  // console.log(question_id);
+  // GET SINGLE QUESTION
   async function oneQuestion() {
     try {
       const { data } = await baseAxios.get(`/question/${question_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      // console.log(data.user_id);
+
       setSingleQuestion(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // GET ANSWERS
+  async function questionsAnswer() {
+    try {
+      const { data } = await baseAxios.get(`/answer/${question_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setEachAnswer(data?.answers || []);
     } catch (error) {
       console.log(error);
     }
@@ -33,21 +45,24 @@ const QuestionDetail = () => {
 
   useEffect(() => {
     oneQuestion();
+    questionsAnswer();
   }, [question_id]);
 
-  // posted answer handler function
-
-  const answerDom = useRef();
+  // POST ANSWER
   async function answerHandler(e) {
     e.preventDefault();
 
     const answer = answerDom.current.value;
-    const token = localStorage.getItem("token");
+
     if (!answer) {
-      setError("please enter the answer");
+      setError("Please enter the answer");
       return;
     }
+
     setLoading(true);
+    setError("");
+    setServerResponse("");
+
     try {
       const response = await baseAxios.post(
         "/answer",
@@ -56,105 +71,84 @@ const QuestionDetail = () => {
           questionid: question_id,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
+
       setLoading(false);
+
+      // clear input
       answerDom.current.value = "";
-      // console.log(response);
-      // alert(response?.data?.message);
-      setServerResponse(response?.data?.message);
+
+      // show success message immediately
+      setServerResponse(response?.data?.message || "Answer posted!");
       setTimeout(() => {
-        nav(0);
-      }, 100);
+        setServerResponse("");
+      }, 2000);
+      // refresh answers immediately
+      await questionsAnswer();
     } catch (error) {
       setLoading(false);
-      // console.log(error.message);
-      setError(error?.response?.data?.message);
+      setError(error?.response?.data?.message || "Something went wrong");
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
   }
-
-  async function questionsAnswer() {
-    try {
-      const { data } = await baseAxios.get(`/answer/${question_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // console.log(data.answers);
-      setEachAnswer(data.answers);
-    } catch (error) {
-      alert(error.message);
-    }
-  }
-
-  useEffect(() => {
-    questionsAnswer();
-  }, []);
 
   return (
-    <>
-      <div className={classes.outer__wrapper__qDetail}>
-        <div className={classes.question__detail}>
-          <h3>Question</h3>
-          <h4>{singleQuestion.title}</h4>
-          <p>{singleQuestion.content}</p>
-          <hr />
-          <h3>Answer From The Community</h3>
-          <hr />
-        </div>
+    <div className={classes.outer__wrapper__qDetail}>
+      {/* QUESTION */}
+      <div className={classes.question__detail}>
+        <h3>Question</h3>
+        <h4>{singleQuestion.title}</h4>
+        <p>{singleQuestion.content}</p>
 
-        <div>
-          {eachAnswers?.map((itemOne, id) => {
-            return (
-              <div className={classes.posted__answer__wrapper} key={id}>
-                <div className={classes.answer__wrapper__left__side}>
-                  <div>
-                    <FaUser size={40} />
-                  </div>
+        <hr />
+        <h3>Answer From The Community</h3>
+        <hr />
+      </div>
 
-                  <h5>{itemOne.user_name}</h5>
-                </div>
-                <hr />
-                <div>{itemOne.content}</div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className={classes.answer__box__wrapper}>
-          <h4>Answer The Top question</h4>
-          <Link className={classes.go__to__question} to={"/"}>
-            Go to Question page{" "}
-          </Link>
-
-          <div className={classes.answer__box}>
-            <form action="" onSubmit={answerHandler}>
-              <textarea
-                ref={answerDom}
-                name="text"
-                id="answer__input"
-                placeholder="Your Answer..."
-              ></textarea>
-              {error ? (
-                <div className={classes.error__text}>{error}</div>
-              ) : (
-                <div className={classes.posted__response}>{severResponse}</div>
-              )}
-              <button onClick={() => nav(0)} type="submit">
-                {loading ? (
-                  <ClipLoader size={15}></ClipLoader>
-                ) : (
-                  "Post Your Answer"
-                )}
-              </button>
-            </form>
+      {/* ANSWERS */}
+      <div>
+        {eachAnswers.map((item, index) => (
+          <div className={classes.posted__answer__wrapper} key={index}>
+            <div className={classes.answer__wrapper__left__side}>
+              <FaUser size={40} />
+              <h5>{item.user_name}</h5>
+            </div>
+            <hr />
+            <div>{item.content}</div>
           </div>
+        ))}
+      </div>
+
+      {/* ANSWER BOX */}
+      <div className={classes.answer__box__wrapper}>
+        <h4>Answer The Top Question</h4>
+
+        <Link className={classes.go__to__question} to={"/"}>
+          Go to Question page
+        </Link>
+
+        <div className={classes.answer__box}>
+          <form onSubmit={answerHandler}>
+            {/* feedback messages */}
+            {error && <div className={classes.error__text}>{error}</div>}
+
+            {serverResponse && !error && (
+              <div className={classes.posted__response}>{serverResponse}</div>
+            )}
+
+            <textarea ref={answerDom} placeholder="Your Answer..."></textarea>
+
+            <button type="submit" disabled={loading}>
+              {loading ? <ClipLoader size={15} /> : "Post Your Answer"}
+            </button>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
